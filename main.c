@@ -243,27 +243,15 @@ void *prvnt_recov_dorelay(void *arg)
                 memcpy(((struct ether_header *)relay_pckt)->ether_dhost, receiver_mac, ETH_ALEN);
                 pcap_sendpacket(handle, relay_pckt, header.len);
                 free(relay_pckt);
-
-                /*
-                memcpy(eth_hdr->ether_shost, my_mac, ETH_ALEN);
-                memcpy(eth_hdr->ether_dhost, receiver_mac, ETH_ALEN);
-                pcap_sendpacket(handle, packet, header.len);
-                */
             }
             /*
             else if(!memcmp(eth_hdr->ether_shost, receiver_mac, ETH_ALEN) && !memcmp(&(ip_hdr->ip_dst), &sender_ip, 4)) {
-
                 relay_pckt = (u_char *)malloc(header.len);              // from receiver to sender
                 memcpy(relay_pckt, packet, header.len);
                 memcpy(((struct ether_header *)relay_pckt)->ether_shost, my_mac, ETH_ALEN);
                 memcpy(((struct ether_header *)relay_pckt)->ether_dhost, sender_mac, ETH_ALEN);
                 pcap_sendpacket(handle, relay_pckt, header.len);
                 free(relay_pckt);
-
-                memcpy(eth_hdr->ether_shost, my_mac, ETH_ALEN);
-                memcpy(eth_hdr->ether_dhost, sender_mac, ETH_ALEN);
-                pcap_sendpacket(handle, packet, header.len);
-
             }
             */
         }

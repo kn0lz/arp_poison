@@ -6,3 +6,4 @@ CONFIG -= qt
 SOURCES += main.c
 LIBS += -lpcap
 LIBS += -lpthread
+LIBS += -lnet
